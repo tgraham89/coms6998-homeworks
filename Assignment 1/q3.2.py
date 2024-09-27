@@ -9,11 +9,7 @@ from torchvision import transforms
 import matplotlib.pyplot as plt
 import numpy as np
 
-##########################
-### MODEL
-##########################
-
-
+# Model
 class InceptionModule(torch.nn.Module):
     def __init__(self, in_channels, out_channels1, out_channels2, out_channels3, out_channels4):
         super(InceptionModule, self).__init__()
@@ -75,10 +71,7 @@ class InceptionNet(torch.nn.Module):
         return x
 
 
-##########################
-### Data Loading
-##########################
-
+# Settings
 batch_size = 64  # As specified
 transform = transforms.ToTensor()
 
@@ -89,10 +82,7 @@ test_dataset = FashionMNIST(root='data', train=False, transform=transform)
 train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
 val_loader = DataLoader(dataset=test_dataset, batch_size=batch_size, shuffle=False)
 
-##########################
-### Model and Hyperparameters
-##########################
-
+# Load Model
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 model = InceptionNet(num_classes=10).to(device)
@@ -127,10 +117,7 @@ val_losses = []
 train_accuracies = []
 val_accuracies = []
 
-##########################
-### Helper Function
-##########################
-
+# Helper function to compute accuracy
 def compute_accuracy(model, data_loader):
     correct_pred, num_examples = 0, 0
     model.eval()  # Set model to evaluation mode
@@ -146,10 +133,7 @@ def compute_accuracy(model, data_loader):
     model.train()  # Switch back to train mode
     return correct_pred.float() / num_examples * 100
 
-##########################
-### Training Loop
-##########################
-
+# Training Loop
 for epoch in range(num_epochs):
     model.train()  # Ensure model is in training mode
     running_loss = 0.0
@@ -202,10 +186,6 @@ for epoch in range(num_epochs):
     val_accuracies.append(val_acc)
     
     print(f'Epoch [{epoch+1}/{num_epochs}], Train Loss: {train_loss:.4f}, Val Loss: {val_loss:.4f}, Train Acc: {train_acc:.2f}%, Val Acc: {val_acc:.2f}%')
-
-##########################
-### Plotting the Results
-##########################
 
 # Plot Training and Validation Loss
 plt.figure(figsize=(10, 5))

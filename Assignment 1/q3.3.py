@@ -6,11 +6,7 @@ from torchvision import transforms
 import matplotlib.pyplot as plt
 import numpy as np
 
-##########################
-### MODEL
-##########################
-
-
+# Model
 class InceptionModule(torch.nn.Module):
     def __init__(self, in_channels, out_channels1, out_channels2, out_channels3, out_channels4):
         super(InceptionModule, self).__init__()
@@ -71,9 +67,6 @@ class InceptionNet(torch.nn.Module):
         x = self.fc(x)
         return x
     
-##########################
-### Data Loading
-##########################
 
 transform = transforms.ToTensor()
 
@@ -81,10 +74,7 @@ transform = transforms.ToTensor()
 train_dataset = FashionMNIST(root='data', train=True, transform=transform, download=True)
 test_dataset = FashionMNIST(root='data', train=False, transform=transform)
 
-##########################
-### Model and Hyperparameters
-##########################
-
+# Load model
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 model = InceptionNet(num_classes=10).to(device)
@@ -107,10 +97,7 @@ num_epochs = 1  # For simplicity, we'll run a short experiment with 1 epoch per 
 # Collect stats for plotting
 train_losses = []
 
-##########################
-### Helper Function
-##########################
-
+# Helper function to compute training loss
 def compute_training_loss(model, data_loader):
     running_loss = 0.0
     model.eval()  # Set model to evaluation mode
@@ -123,10 +110,7 @@ def compute_training_loss(model, data_loader):
     model.train()  # Switch back to train mode
     return running_loss / len(data_loader)
 
-##########################
-### Training Loop
-##########################
-
+# Training loop
 for batch_size in batch_sizes:
     print(f"Training with batch size: {batch_size}")
     
@@ -158,10 +142,6 @@ for batch_size in batch_sizes:
     
     # Output the training loss for this batch size
     print(f"Batch size {batch_size}, Training Loss: {avg_train_loss:.4f}")
-
-##########################
-### Plotting the Results
-##########################
 
 # Plot Training Loss for Different Batch Sizes
 plt.figure(figsize=(10, 5))

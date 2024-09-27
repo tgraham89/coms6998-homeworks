@@ -18,11 +18,7 @@ from torchvision.datasets import FashionMNIST
 if torch.cuda.is_available():
     torch.backends.cudnn.deterministic = True
 
-##########################
-### MODEL
-##########################
-
-
+#Model
 class InceptionModule(torch.nn.Module):
     def __init__(self, in_channels, out_channels1, out_channels2, out_channels3, out_channels4):
         super(InceptionModule, self).__init__()
@@ -84,10 +80,7 @@ class InceptionNet(torch.nn.Module):
         return x
     
 
-##########################
-### SETTINGS
-##########################
-
+# Settings
 batch_size = 64  # As specified
 transform = transforms.ToTensor()
 
@@ -98,10 +91,7 @@ test_dataset = FashionMNIST(root='data', train=False, transform=transform)
 train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
 val_loader = DataLoader(dataset=test_dataset, batch_size=batch_size, shuffle=False)
 
-##########################
-### Model and Hyperparameters
-##########################
-
+# Set up model
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 model = InceptionNet(num_classes=10).to(device)
@@ -120,10 +110,7 @@ iter_per_chunk = len(train_loader) // num_chunks
 # Store accuracies for plotting
 accuracies = []
 
-##########################
-### Helper Function
-##########################
-
+# Helper function to calculate accuracy
 def compute_accuracy(model, data_loader):
     correct_pred, num_examples = 0, 0
     model.eval()  # Set model to evaluation mode
@@ -139,10 +126,7 @@ def compute_accuracy(model, data_loader):
     model.train()  # Switch back to train mode
     return correct_pred.float() / num_examples * 100
 
-##########################
-### Training Loop
-##########################
-
+# Training loop
 for lr in learning_rates:
     # Define optimizer with the current learning rate
     optimizer = torch.optim.SGD(model.parameters(), lr=lr)
@@ -172,10 +156,7 @@ for lr in learning_rates:
     
     print(f'Validation accuracy for lr={lr}: {val_acc.item():.2f}%')
 
-##########################
-### Plotting the Results
-##########################
-
+# Plot the results
 plt.plot(learning_rates, accuracies, marker='o')
 plt.xscale('log')
 plt.xlabel('Learning Rate')
